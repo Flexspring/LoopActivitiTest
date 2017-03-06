@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:activiti="http://activiti.org/bpmn" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" typeLanguage="http://www.w3.org/2001/XMLSchema" expressionLanguage="http://www.w3.org/1999/XPath" targetNamespace="http://www.modulusdata.com/modulus/prototype">
+  <process id="loopControl" name="Loop Control" isExecutable="true">
+    <startEvent id="startevent1" name="Start"></startEvent>
+    <scriptTask id="setCounter" name="set Counter" scriptFormat="groovy" activiti:autoStoreVariables="false">
+      <script>def counter = execution.getVariable("counter")
+if (!counter){
+	counter = 1
+}
+execution.setVariable("counter", counter + 1)</script>
+    </scriptTask>
+    <sequenceFlow id="flow1" sourceRef="startevent1" targetRef="inclusivegateway1"></sequenceFlow>
+    <exclusiveGateway id="CheckCounterGateway" name="Check Counter Gateway" default="flowContinue"></exclusiveGateway>
+    <sequenceFlow id="flow2" sourceRef="setCounter" targetRef="CheckCounterGateway"></sequenceFlow>
+    <scriptTask id="printCounter" name="print Counter" scriptFormat="groovy" activiti:autoStoreVariables="false">
+      <script>println counter</script>
+    </scriptTask>
+    <sequenceFlow id="flowContinue" sourceRef="CheckCounterGateway" targetRef="printCounter"></sequenceFlow>
+    <sequenceFlow id="flow4" sourceRef="printCounter" targetRef="inclusivegateway1"></sequenceFlow>
+    <endEvent id="endevent1" name="End"></endEvent>
+    <sequenceFlow id="flowStop" sourceRef="CheckCounterGateway" targetRef="endevent1">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${counter >= 100}]]></conditionExpression>
+    </sequenceFlow>
+    <inclusiveGateway id="inclusivegateway1" name="Inclusive Gateway"></inclusiveGateway>
+    <sequenceFlow id="flow5" sourceRef="inclusivegateway1" targetRef="setCounter"></sequenceFlow>
+  </process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_loopControl">
+    <bpmndi:BPMNPlane bpmnElement="loopControl" id="BPMNPlane_loopControl">
+      <bpmndi:BPMNShape bpmnElement="startevent1" id="BPMNShape_startevent1">
+        <omgdc:Bounds height="35.0" width="35.0" x="40.0" y="121.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="setCounter" id="BPMNShape_setCounter">
+        <omgdc:Bounds height="55.0" width="105.0" x="180.0" y="111.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="CheckCounterGateway" id="BPMNShape_CheckCounterGateway">
+        <omgdc:Bounds height="40.0" width="40.0" x="320.0" y="118.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="printCounter" id="BPMNShape_printCounter">
+        <omgdc:Bounds height="55.0" width="105.0" x="405.0" y="111.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="endevent1" id="BPMNShape_endevent1">
+        <omgdc:Bounds height="35.0" width="35.0" x="323.0" y="210.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="inclusivegateway1" id="BPMNShape_inclusivegateway1">
+        <omgdc:Bounds height="40.0" width="40.0" x="110.0" y="118.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge bpmnElement="flow1" id="BPMNEdge_flow1">
+        <omgdi:waypoint x="75.0" y="138.0"></omgdi:waypoint>
+        <omgdi:waypoint x="110.0" y="138.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow2" id="BPMNEdge_flow2">
+        <omgdi:waypoint x="285.0" y="138.0"></omgdi:waypoint>
+        <omgdi:waypoint x="320.0" y="138.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flowContinue" id="BPMNEdge_flowContinue">
+        <omgdi:waypoint x="360.0" y="138.0"></omgdi:waypoint>
+        <omgdi:waypoint x="405.0" y="138.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow4" id="BPMNEdge_flow4">
+        <omgdi:waypoint x="457.0" y="111.0"></omgdi:waypoint>
+        <omgdi:waypoint x="457.0" y="67.0"></omgdi:waypoint>
+        <omgdi:waypoint x="130.0" y="67.0"></omgdi:waypoint>
+        <omgdi:waypoint x="130.0" y="118.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flowStop" id="BPMNEdge_flowStop">
+        <omgdi:waypoint x="340.0" y="158.0"></omgdi:waypoint>
+        <omgdi:waypoint x="340.0" y="210.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow5" id="BPMNEdge_flow5">
+        <omgdi:waypoint x="150.0" y="138.0"></omgdi:waypoint>
+        <omgdi:waypoint x="180.0" y="138.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</definitions>
